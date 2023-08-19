@@ -1,22 +1,35 @@
 "use client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
   const pathName = usePathname();
   const { data: session } = useSession();
   const [copied, setCopied] = useState("");
+  const router = useRouter();
   const handleCopy = () => {
     setCopied(prompt.prompt);
     navigator.clipboard.writeText(prompt.prompt);
     setTimeout(() => setCopied(false), 2000);
   };
+  const handleProfileClick = () => {
+    if (prompt.creator._id === session?.user.id) {
+      router.push("/profile");
+    } else {
+      router.push(
+        `/profile/${prompt.creator._id}?name=${prompt.creator.username}`
+      );
+    }
+  };
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
-        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
+        <div
+          className="flex-1 flex justify-start items-center gap-3 cursor-pointer"
+          onClick={handleProfileClick}
+        >
           <Image
             src={prompt.creator.image}
             alt="user image"
