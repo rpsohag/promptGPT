@@ -50,6 +50,11 @@ const Feed = () => {
       }, 500)
     );
   };
+  const handleTagClick = (tagName) => {
+    setSearchText(tagName);
+    const searchResult = filterPrompts(tagName);
+    setSearchResults(searchResult);
+  };
 
   return (
     <section className="feed">
@@ -64,9 +69,9 @@ const Feed = () => {
         />
       </form>
       {searchText ? (
-        <PromptCartList data={searchResults} handleTagClick={() => {}} />
+        <PromptCartList data={searchResults} handleTagClick={handleTagClick} />
       ) : (
-        <PromptCartList data={prompts} handleTagClick={() => {}} />
+        <PromptCartList data={prompts} handleTagClick={handleTagClick} />
       )}
     </section>
   );
