@@ -17,18 +17,40 @@ const PromptCartList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-  const [searchText, setSearchText] = useState("");
   const [prompts, setPrompts] = useState([]);
-  const handleSearchChange = (e) => {};
+  const [searchText, setSearchText] = useState("");
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
 
+  const fetchPrompts = async () => {
+    const response = await fetch("/api/prompt");
+    const data = await response.json();
+    setPrompts(data);
+  };
   useEffect(() => {
-    const fetchPrompts = async () => {
-      const response = await fetch("/api/prompt");
-      const data = await response.json();
-      setPrompts(data);
-    };
     fetchPrompts();
   }, []);
+
+  const filterPrompts = (stext) => {
+    const regex = new RegExp(stext, "i");
+    return prompts.filter(
+      (item) =>
+        regex.test(item.creator.username) ||
+        regex.test(item.tag) ||
+        regex.test(item.prompt)
+    );
+  };
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+    setSearchText(e.target.value);
+    setSearchTimeout(
+      setTimeout(() => {
+        const searchResult = filterPrompts(e.target.value);
+        setSearchResults(searchResult);
+      }, 500)
+    );
+  };
+
   return (
     <section className="feed">
       <form className="w-full flex-center relative">
@@ -41,7 +63,11 @@ const Feed = () => {
           className="search_input peer"
         />
       </form>
-      <PromptCartList data={prompts} handleTagClick={() => {}} />
+      {searchText ? (
+        <PromptCartList data={searchResults} handleTagClick={() => {}} />
+      ) : (
+        <PromptCartList data={prompts} handleTagClick={() => {}} />
+      )}
     </section>
   );
 };
