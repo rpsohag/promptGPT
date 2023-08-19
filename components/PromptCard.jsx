@@ -1,8 +1,12 @@
 "use client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
+  const pathName = usePathname();
+  const { data: session } = useSession();
   const [copied, setCopied] = useState("");
   const handleCopy = () => {
     setCopied(prompt.prompt);
@@ -34,6 +38,7 @@ const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
             src={
               copied === prompt.prompt ? "./icons/tick.svg" : "/icons/copy.svg"
             }
+            alt="user image"
             width={12}
             height={12}
           />
@@ -46,6 +51,22 @@ const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
       >
         #{prompt.tag}
       </p>
+      {session?.user.id === prompt.creator._id && pathName === "/profile" && (
+        <div className="mt-5 flex justify-end gap-4 border-t border-gray-100 pt-3">
+          <p
+            className="font-inter text-sm cursor-pointer bg-blue-900 text-white p-1"
+            onClick={handleEdit}
+          >
+            Edit
+          </p>
+          <p
+            className="font-inter text-sm cursor-pointer bg-red-500 text-white p-1"
+            onClick={handleDelete}
+          >
+            Delete
+          </p>
+        </div>
+      )}
     </div>
   );
 };
