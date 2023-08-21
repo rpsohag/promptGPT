@@ -23,7 +23,7 @@ const MyProfile = () => {
     const hasConfirmed = confirm("Are your sure?");
     if (hasConfirmed) {
       try {
-        await fetch(`/api/prompt/${prompt._id.toString()}`, {
+        await fetch(`/api/prompt/${prompt?._id.toString()}`, {
           method: "DELETE",
         });
       } catch (error) {
