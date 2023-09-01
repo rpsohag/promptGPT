@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 const MyProfile = () => {
   const { data: session } = useSession();
   const [prompts, setPrompts] = useState([]);
+  console.log(session.user.id);
   const router = useRouter();
   useEffect(() => {
     const fetchPrompts = async () => {
