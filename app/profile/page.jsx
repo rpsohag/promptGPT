@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 const MyProfile = () => {
   const { data: session } = useSession();
   const [prompts, setPrompts] = useState([]);
-  console.log(session.user.id);
   const router = useRouter();
   useEffect(() => {
     const fetchPrompts = async () => {
@@ -16,7 +15,7 @@ const MyProfile = () => {
       setPrompts(data);
     };
     if (session?.user.id) fetchPrompts();
-  }, []);
+  }, [session?.user.id]);
   const handleEdit = (prompt) => {
     router.push(`/update-prompt?id=${prompt._id}`);
   };
