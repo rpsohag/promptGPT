@@ -49,7 +49,7 @@ const EditPrompt = () => {
   };
   return (
     <Form
-      type="Edit"
+      type="Update"
       post={post}
       submitting={submitting}
       handleSubmit={updatePrompt}
